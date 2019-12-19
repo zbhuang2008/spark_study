@@ -229,7 +229,7 @@ arraycopy | 百万  | 1
 ###		4.2	算法实现的改进   
   	
 改进之前的流程图(蓝色标记表示变化的节点)：    
-![kcore_runtime_before](img/kcore_runtime_before.jpg)
+![kcore_runtime_before](img/kcore-runtime-before.jpg)
 
 1. 原先的思路。当前实现为常规思路，对变化的节点通过标记节点属性`ischanged=true/false`，在当前迭代结束后，擦除标记。
 
