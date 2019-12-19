@@ -21,7 +21,7 @@ graphx的`Graph`对象是用户操作图的入口, 它包含了边(edge)和顶�
 1. 根据边构建图(Graph.fromEdges)
  
 	```
-		def fromEdges[VD: ClassTag, ED: ClassTag](
+	def fromEdges[VD: ClassTag, ED: ClassTag](
 	      edges: RDD[Edge[ED]],
 	      defaultValue: VD,
 	      edgeStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
