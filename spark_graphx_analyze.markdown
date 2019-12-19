@@ -1,6 +1,5 @@
 #	Graphx:构建graph和聚合消息
 
-
 @玄畅    
 2014.12.29
 
@@ -37,7 +36,6 @@ graphx的`Graph`对象是用户操作图的入口, 它包含了边(edge)和顶�
 	  uniqueEdges: Option[PartitionStrategy] = None,
 	  edgeStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
 	  vertexStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY): Graph[VD, Int] =
-	
 	```
 
 ###	1.2	第一步：构建边EdgeRDD
@@ -62,7 +60,6 @@ api：
         else
           (dst, src)
     }.distinct()
-
 ```
 
 数据形如：
@@ -78,7 +75,6 @@ api：
 117,79
 117,118
 79,118
-
 ```
 
 ####	1.2.2		第二步：初步生成Graph
@@ -104,7 +100,6 @@ api：
 
 	`local2global`记录的是所有的VertexId信息的数组。形如：`srcId,dstId,srcId,dstId,srcId,dstId,srcId,dstId`。其中会包含相同的ID。即：当前分区所有vertextId的顺序实际值
 
-	
 	```
 	＃	用途：
 	＃ 根据本地下标取VertexId
@@ -112,7 +107,6 @@ api：
 	
 	＃	根据VertexId取本地下标，取属性
 	VertexId -> global2local -> index -> data -> attr object
-	
 	```
 	
 	*spark的数据最终是在patition中表达，所以各种transform都在这里进行，这里的数据结构性能至关重要*
@@ -165,10 +159,8 @@ api：
 		
 		关键是：根据vertexId生成`map:GraphXPrimitiveKeyOpenHashMap`，这个map跟边中的`global2local`是不是很相似？这个map根据long vertxId生成下标索引，目测：相同的点会有相同的下标。// todo..
 	
-		
 3.	创建`VertexRDDImpl`对象         
 	`new VertexRDDImpl(vertexPartitions)`，这就完事了
-	
 	
 ###	1.4	第三步	 生成Graph对象［finished］
 
@@ -179,7 +171,6 @@ api：
 
 ```
 new GraphImpl(vertices, new ReplicatedVertexView(edges.asInstanceOf[EdgeRDDImpl[ED, VD]]))
-
 ```	
 
 ##		2. 常用函数分析    
@@ -203,16 +194,14 @@ aggregateMessages的接口如下：
     : VertexRDD[A] = {
     aggregateMessagesWithActiveSet(sendMsg, mergeMsg, tripletFields, None)
   }
-
 ```
 -	sendMsg： 发消息函数	
 
 	```
 	private def sendMsg(ctx: EdgeContext[KCoreVertex, Int, Map[Int, Int]]): Unit = {
-    	ctx.sendToDst(Map(ctx.srcAttr.preKCore -> -1, ctx.srcAttr.curKCore -> 1))
-    	ctx.sendToSrc(Map(ctx.dstAttr.preKCore -> -1, ctx.dstAttr.curKCore -> 1))
-  }
-  
+    	  ctx.sendToDst(Map(ctx.srcAttr.preKCore -> -1, ctx.srcAttr.curKCore -> 1))
+    	  ctx.sendToSrc(Map(ctx.dstAttr.preKCore -> -1, ctx.dstAttr.curKCore -> 1))
+  	}
 	```
 -	mergeMsg：合并消息函数。用于Map阶段，每个edge分区中每个点收到的消息合并，以及reduce阶段，合并不同分区的消息。合并vertexId相同的消息    
 -	tripletFields：定义发消息的方向
@@ -298,7 +287,6 @@ aggregateMessages的接口如下：
 
 (点击查看大图)
 ![graphx full](img/graphx_global.jpg "全图")
-
 
 *如果没有绕晕，从头再读一遍*
 
